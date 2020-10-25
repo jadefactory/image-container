@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    button a {
+      text-decoration: none;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h4>업로드페이지</h4>
+  <form method="POST" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="photo">
+    <button type="submit">전송</button>
+    <button><a href="/">홈으로 이동</a></button>
+  </form>
+</body>
+</html>
