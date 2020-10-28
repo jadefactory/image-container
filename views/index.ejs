@@ -16,7 +16,7 @@
       font-size: 2rem;
     }
     nav {
-      width: 1050px;
+      width: 1000px;
       height: 50px;
       background: yellowgreen;
       border-radius: 10px;
@@ -36,28 +36,34 @@
       
     }
     section {
-      width: 1050px;
-      height: 525px;
+      width: 1000px;
+      height: 400px;
       border: 1px solid black;
       margin: 25px auto;
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+
     }
     img {
       width: 200px;
       height: 200px;
-      margin-top: 5px;
-      margin-bottom: 5px;
+    }
+    .test {
+      width: 200px;
+      height: 200px;
+      background: crimson;
     }
   </style>
 </head>
 <body>
   <header>이미지 컨테이너</header>
   <nav><li><a href="./upload">사진 업로드</a></li></nav>
+  
   <section>
     <% for(let i = 0; i < imageFile.length; i++){ %>
       <img src="image/<%= imageFile[i].url%>" alt="images">
     <% } %>
+   
   </section>
   
 </body>

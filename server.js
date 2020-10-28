@@ -44,10 +44,28 @@ app.get('/upload', function (_, res) {
 });
 
 app.post('/upload', upload.single('photo'), function (req, res) {
-  db.collection('url').insertOne({ url: req.file.originalname }, function () {
-    console.log('Data is saved');
+  db.collection('counter').findOne({ name: 'idMaker' }, function (
+    error,
+    result
+  ) {
+    let newId = result.idNumber;
+    db.collection('url').insertOne(
+      { _id: newId + 1, url: req.file.originalname },
+      function () {
+        console.log('Data is saved');
+        db.collection('counter').updateOne(
+          { name: 'idMaker' },
+          { $inc: { idNumber: 1 } },
+          function (error, result) {
+            if (error) {
+              return console.log(error);
+            }
+          }
+        );
+      }
+    );
+    res.redirect('/');
   });
-  res.redirect('/');
 });
 
 app.get('/image/:name', function (req, res) {
