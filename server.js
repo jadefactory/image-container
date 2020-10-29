@@ -27,14 +27,15 @@ MongoClient.connect(process.env.DB_URL, function (error, client) {
   }
   db = client.db('imagecontainer');
   app.listen(process.env.PORT, function () {
-    console.log('listening on 8080');
+    console.log('SERVER IS RUNNING ON PORT 8080');
   });
 });
 
 app.get('/', function (_, res) {
   db.collection('url')
     .find()
-    .toArray(function (error, result) {
+    .toArray(function (_, result) {
+      // console.log(result);
       res.render('index.ejs', { imageFile: result });
     });
 });
@@ -44,30 +45,44 @@ app.get('/upload', function (_, res) {
 });
 
 app.post('/upload', upload.single('photo'), function (req, res) {
-  db.collection('counter').findOne({ name: 'idMaker' }, function (
-    error,
-    result
-  ) {
+  db.collection('counter').findOne({ name: 'idMaker' }, function (_, result) {
     let newId = result.idNumber;
     db.collection('url').insertOne(
       { _id: newId + 1, url: req.file.originalname },
       function () {
-        console.log('Data is saved');
+        console.log('IMAGE UPLOAD SUCCESS');
         db.collection('counter').updateOne(
           { name: 'idMaker' },
           { $inc: { idNumber: 1 } },
-          function (error, result) {
+          function (error, _) {
             if (error) {
               return console.log(error);
             }
           }
         );
+        res.redirect('/');
       }
     );
-    res.redirect('/');
   });
 });
 
 app.get('/image/:name', function (req, res) {
   res.sendFile(__dirname + '/public/image/' + req.params.name);
+});
+
+app.delete('/delete', function (req, res) {
+  req.body._id = parseInt(req.body._id);
+  db.collection('url').deleteOne(req.body, function () {
+    console.log('DELETE SUCCESS');
+    res.redirect('/');
+  });
+});
+
+app.get('/detail/:id', function (req, res) {
+  db.collection('url').findOne({ _id: parseInt(req.params.id) }, function (
+    error,
+    result
+  ) {
+    res.render('detail.ejs', { imageFile: result });
+  });
 });
